@@ -1,0 +1,16 @@
+{
+"text.autoconfig.simplefog.title": "Simple Fog Control",
+"text.autoconfig.simplefog.category.terrain": "Terrain Fog",
+"text.autoconfig.simplefog.option.terrainToggle": "Enable terrain fog modification",
+"text.autoconfig.simplefog.option.terrainStart": "Fog begin (percent of view distance)",
+"text.autoconfig.simplefog.option.terrainEnd": "Fog end (percent of view distance)",
+"text.autoconfig.simplefog.category.water": "Underwater Fog",
+"text.autoconfig.simplefog.option.waterToggle": "Enable underwater fog modification",
+"text.autoconfig.simplefog.option.waterStart": "Fog begin (percent of view distance)",
+"text.autoconfig.simplefog.option.waterEnd": "Fog end (percent of view distance)",
+"text.autoconfig.simplefog.option.waterEndSwamp": "Fog end in swamp (percent of view distance)",
+"text.autoconfig.simplefog.category.nether": "Nether Fog",
+"text.autoconfig.simplefog.option.netherToggle": "Enable nether fog modification",
+"text.autoconfig.simplefog.option.netherStart": "Fog begin (percent of view distance)",
+"text.autoconfig.simplefog.option.netherEnd": "Fog end (percent of view distance)"
+}
