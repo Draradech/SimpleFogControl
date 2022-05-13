@@ -2,7 +2,7 @@
 
 Allows simple control over water, nether and terrain fog
 
-![Logo](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/icon512.png)
+![Comparision](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)
 
 ![Settings 1](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/settings1.png)
 
