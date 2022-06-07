@@ -6,7 +6,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
-import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,11 +25,11 @@ public class FogRendererMixin {
     private static void afterSetupFog(Camera camera, FogMode fogMode, float viewDistance, boolean thickFog, CallbackInfo info) {
         FogType fogType = camera.getFluidInCamera();
         Entity entity = camera.getEntity();
-        if (fogType == FogType.LAVA) {
-        } else if (fogType == FogType.POWDER_SNOW) {
-        } else if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(MobEffects.BLINDNESS)) {
-        } else if (fogType == FogType.WATER) {
+        if (fogType == FogType.WATER) {
             if(SimpleFogMain.config.waterToggle) overrideWaterFog(viewDistance, entity);
+        } else if (fogType == FogType.LAVA) {
+        } else if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(MobEffects.BLINDNESS)) {
+        } else if (fogType == FogType.POWDER_SNOW) {
         } else if (thickFog) {
             if(SimpleFogMain.config.netherToggle) overrideNetherFog(viewDistance);
         } else if (fogMode == FogMode.FOG_SKY) {
@@ -39,15 +38,14 @@ public class FogRendererMixin {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private static void overrideWaterFog(float viewDistance, Entity entity) {
         float fogStart, fogEnd;
         fogStart = viewDistance * SimpleFogMain.config.waterStart * 0.01f;
         fogEnd = viewDistance * SimpleFogMain.config.waterEnd * 0.01f;
         if (entity instanceof LocalPlayer) {
             LocalPlayer localPlayer = (LocalPlayer)entity;
-            Holder<Biome> biomeHolder = localPlayer.level.getBiome(localPlayer.blockPosition());
-            if (Biome.getBiomeCategory(biomeHolder) == Biome.BiomeCategory.SWAMP) {
+            Biome biome = localPlayer.level.getBiome(localPlayer.blockPosition());
+            if (biome.getBiomeCategory() == Biome.BiomeCategory.SWAMP) {
                 fogEnd = viewDistance * SimpleFogMain.config.waterEndSwamp * 0.01f;
             }
             fogEnd *= Math.max(0.25f, localPlayer.getWaterVision());
