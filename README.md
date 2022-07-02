@@ -1,6 +1,8 @@
 # Simple Fog Control
 
-Allows simple control over water, nether and terrain fog
+Allows simple control over water, nether and terrain fog.
+
+The settings screen is available through either the "Mod Menu" or "Mod Settings" mod.
 
 [![Comparision](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)
 
