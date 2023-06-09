@@ -51,7 +51,7 @@ public class FogRendererMixin {
         fogEnd = viewDistance * SimpleFogMain.config.waterEnd * 0.01f;
         if (entity instanceof LocalPlayer) {
             LocalPlayer localPlayer = (LocalPlayer)entity;
-            Holder<Biome> biomeHolder = localPlayer.level.getBiome(localPlayer.blockPosition());
+            Holder<Biome> biomeHolder = localPlayer.level().getBiome(localPlayer.blockPosition());
             if (biomeHolder.is(BiomeTags.HAS_CLOSER_WATER_FOG)) {
                 fogEnd = viewDistance * SimpleFogMain.config.waterEndSwamp * 0.01f;
             }
