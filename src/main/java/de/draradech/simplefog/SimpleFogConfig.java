@@ -18,6 +18,8 @@ public class SimpleFogConfig implements ConfigData {
     public float rainStart = 0;
     @ConfigEntry.Category(value = "terrain")
     public float rainEnd = 110;
+    @ConfigEntry.Category(value = "terrain")
+    public int rainFogApplySpeed = 3;
     
     @ConfigEntry.Category(value = "water")
     public boolean waterToggle = true;

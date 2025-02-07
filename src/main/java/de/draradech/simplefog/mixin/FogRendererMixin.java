@@ -1,5 +1,6 @@
 package de.draradech.simplefog.mixin;
 
+import de.draradech.simplefog.SimpleFogConfig;
 import de.draradech.simplefog.SimpleFogMain;
 import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
@@ -8,11 +9,12 @@ import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FogType;
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +26,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FogRenderer.class)
 public class FogRendererMixin
 {
+    @Unique private static float fogStart, fogEnd;
+    @Unique private static int prevAge = 0;
+
     @Inject(at = @At("RETURN"), method = "setupFog(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/FogRenderer$FogMode;Lorg/joml/Vector4f;FZF)Lnet/minecraft/client/renderer/FogParameters;", cancellable = true)
     private static void afterSetupFog(Camera camera, FogMode fogMode, Vector4f fogColor, float viewDistance, boolean thickFog, float partialTick, CallbackInfoReturnable<FogParameters> info)
     {
@@ -82,15 +87,45 @@ public class FogRendererMixin
     @Unique
     private static void overrideTerrainFog(float viewDistance, Entity entity, CallbackInfoReturnable<FogParameters> info)
     {
-        float fogStart = SimpleFogMain.config.terrainStart, fogEnd = SimpleFogMain.config.terrainEnd;
-        boolean raining = SimpleFogMain.config.rainToggle && entity.level().isRaining();
-        FogParameters parameters = info.getReturnValue();
-        if (raining)
+        try (Level level = entity.level())
         {
-            float percent = (entity.level().getRainLevel(1) - 0.2f) / 0.8f;
-            fogStart = Mth.lerp(percent, fogStart, SimpleFogMain.config.rainStart);
-            fogEnd = Mth.lerp(percent, fogEnd, SimpleFogMain.config.rainEnd);
+            float targetFogStart = SimpleFogMain.config.terrainStart;
+            float targetFogEnd = SimpleFogMain.config.terrainEnd;
+
+            boolean raining = SimpleFogMain.config.rainToggle && level.isRaining();
+            FogParameters parameters = info.getReturnValue();
+
+            if (raining)
+            {
+                boolean skylight = entity.getBlockY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING, entity.getBlockX(), entity.getBlockZ());
+                targetFogStart = Math.max(SimpleFogMain.config.rainStart, skylight ? -999 : 20);
+                targetFogEnd = SimpleFogMain.config.rainEnd;
+            }
+
+            if (entity.tickCount != prevAge)
+            {
+                int a = SimpleFogMain.config.rainFogApplySpeed;
+                if (fogStart < targetFogStart)
+                    fogStart = Math.min(targetFogStart, fogStart + a);
+                else
+                    fogStart = Math.max(targetFogStart, fogStart - a);
+
+                if (fogEnd < targetFogEnd)
+                    fogEnd = Math.min(targetFogEnd, fogEnd + a);
+                else
+                    fogEnd = Math.max(targetFogEnd, fogEnd - a);
+                prevAge = entity.tickCount;
+            }
+
+            info.setReturnValue(new FogParameters(
+                    viewDistance * fogStart * 0.01f,
+                    viewDistance * fogEnd * 0.01f,
+                    parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha())
+            );
         }
-        info.setReturnValue(new FogParameters(viewDistance * fogStart * 0.01f, viewDistance * fogEnd * 0.01f, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

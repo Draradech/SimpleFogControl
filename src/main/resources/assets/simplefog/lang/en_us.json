@@ -7,6 +7,7 @@
 "text.autoconfig.simplefog.option.rainToggle": "Enable rain fog modification",
 "text.autoconfig.simplefog.option.rainStart": "Fog begin (percent of view distance)",
 "text.autoconfig.simplefog.option.rainEnd": "Fog end (percent of view distance)",
+"text.autoconfig.simplefog.option.rainFogApplySpeed": "Fog apply speed (percent per tick)",
 "text.autoconfig.simplefog.category.water": "Underwater Fog",
 "text.autoconfig.simplefog.option.waterToggle": "Enable underwater fog modification",
 "text.autoconfig.simplefog.option.waterStart": "Fog begin (percent of view distance)",
