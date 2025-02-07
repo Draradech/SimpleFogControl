@@ -9,23 +9,29 @@ public class SimpleFogConfig implements ConfigData {
     @ConfigEntry.Category(value = "terrain")
     public boolean terrainToggle = true;
     @ConfigEntry.Category(value = "terrain")
-    public float terrainStart = 70.0f;
+    public float terrainStart = 70;
     @ConfigEntry.Category(value = "terrain")
-    public float terrainEnd = 130.0f;
+    public float terrainEnd = 130;
+    @ConfigEntry.Category(value = "terrain")
+    public boolean rainToggle = true;
+    @ConfigEntry.Category(value = "terrain")
+    public float rainStart = 0;
+    @ConfigEntry.Category(value = "terrain")
+    public float rainEnd = 110;
     
     @ConfigEntry.Category(value = "water")
     public boolean waterToggle = true;
     @ConfigEntry.Category(value = "water")
-    public float waterStart = -20.0f;
+    public float waterStart = -20;
     @ConfigEntry.Category(value = "water")
-    public float waterEnd = 90.0f;
+    public float waterEnd = 90;
     @ConfigEntry.Category(value = "water")
-    public float waterEndSwamp = 60.0f;
+    public float waterEndSwamp = 60;
     
     @ConfigEntry.Category(value = "nether")
     public boolean netherToggle = true;
     @ConfigEntry.Category(value = "nether")
-    public float netherStart = 5.0f;
+    public float netherStart = 5;
     @ConfigEntry.Category(value = "nether")
-    public float netherEnd = 80.0f;
+    public float netherEnd = 80;
 }
