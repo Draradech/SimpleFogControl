@@ -12,14 +12,10 @@ public class SimpleFogConfig implements ConfigData {
     public float terrainStart = 70;
     @ConfigEntry.Category(value = "terrain")
     public float terrainEnd = 130;
+
     @ConfigEntry.Category(value = "terrain")
-    public boolean rainToggle = true;
-    @ConfigEntry.Category(value = "terrain")
-    public float rainStart = 0;
-    @ConfigEntry.Category(value = "terrain")
-    public float rainEnd = 110;
-    @ConfigEntry.Category(value = "terrain")
-    public int rainFogApplySpeed = 3;
+    @ConfigEntry.Gui.CollapsibleObject
+    public RainConfig rainConfig = new RainConfig();
     
     @ConfigEntry.Category(value = "water")
     public boolean waterToggle = true;
@@ -36,4 +32,13 @@ public class SimpleFogConfig implements ConfigData {
     public float netherStart = 5;
     @ConfigEntry.Category(value = "nether")
     public float netherEnd = 80;
+
+    public static class RainConfig
+    {
+        public boolean rainToggle = true;
+        public float rainStart = 0;
+        public float rainEnd = 110;
+        public int minIndoorFog = 50;
+        public int rainFogApplySpeed = 3;
+    }
 }
