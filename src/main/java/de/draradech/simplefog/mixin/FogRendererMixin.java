@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -87,15 +88,9 @@ public class FogRendererMixin
         if (raining)
         {
             float percent = (entity.level().getRainLevel(1) - 0.2f) / 0.8f;
-            fogStart = lerp(percent, fogStart, SimpleFogMain.config.rainStart);
-            fogEnd = lerp(percent, fogEnd, SimpleFogMain.config.rainEnd);
+            fogStart = Mth.lerp(percent, fogStart, SimpleFogMain.config.rainStart);
+            fogEnd = Mth.lerp(percent, fogEnd, SimpleFogMain.config.rainEnd);
         }
         info.setReturnValue(new FogParameters(viewDistance * fogStart * 0.01f, viewDistance * fogEnd * 0.01f, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
-    }
-
-    @Unique
-    private static float lerp(float percent, float start, float end) {
-        percent = Math.min(Math.max(percent, 0), 1);
-        return start + percent * (end - start);
     }
 }
