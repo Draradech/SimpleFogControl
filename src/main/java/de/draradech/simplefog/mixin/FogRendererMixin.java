@@ -26,24 +26,21 @@ public class FogRendererMixin
         if (parameters == FogParameters.NO_FOG) return;
         FogType fogType = camera.getFluidInCamera();
         Entity entity = camera.getEntity();
-        boolean mobEffect = ((entity instanceof LivingEntity) && (((LivingEntity) entity).hasEffect(MobEffects.BLINDNESS) || ((LivingEntity) entity).hasEffect(MobEffects.DARKNESS)));
-        if (fogType == FogType.LAVA || fogType == FogType.POWDER_SNOW || fogMode == FogMode.FOG_SKY || mobEffect)
-            return;
-
-        if (fogType == FogType.WATER)
-        {
-            if (SimpleFogMain.config.waterToggle)
-                FogOverrider.overrideWaterFog(viewDistance, entity, info);
-        }
-        else if (thickFog)
-        {
-            if (SimpleFogMain.config.netherToggle)
-                FogOverrider.overrideNetherFog(viewDistance, info);
-        }
-        else
-        {
-            if (SimpleFogMain.config.terrainToggle)
-                FogOverrider.overrideTerrainFog(viewDistance, entity, info);
+        boolean mobEffect = (  (entity instanceof LivingEntity)
+                && (  ((LivingEntity)entity).hasEffect(MobEffects.BLINDNESS)
+                || ((LivingEntity)entity).hasEffect(MobEffects.DARKNESS)
+        )
+        );
+        if (fogType == FogType.LAVA) {
+        } else if (fogType == FogType.POWDER_SNOW) {
+        } else if (mobEffect) {
+        } else if (fogType == FogType.WATER) {
+            if(SimpleFogMain.config.waterToggle) FogOverrider.overrideWaterFog(viewDistance, entity, info);
+        } else if (thickFog) {
+            if(SimpleFogMain.config.netherToggle) FogOverrider.overrideNetherFog(viewDistance, info);
+        } else if (fogMode == FogMode.FOG_SKY) {
+        } else {
+            if(SimpleFogMain.config.terrainToggle) FogOverrider.overrideTerrainFog(viewDistance, entity, info);
         }
     }
 }
