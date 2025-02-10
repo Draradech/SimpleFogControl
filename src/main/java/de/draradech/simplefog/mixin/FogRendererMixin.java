@@ -38,7 +38,7 @@ public class FogRendererMixin {
             if(SimpleFogMain.config.netherToggle) FogOverrider.overrideNetherFog(viewDistance, info);
         } else if (fogMode == FogMode.FOG_SKY) {
         } else {
-            if(SimpleFogMain.config.terrainToggle) FogOverrider.overrideTerrainFog(viewDistance, entity, info);
+            if(SimpleFogMain.config.terrainToggle) FogOverrider.overrideTerrainFog(viewDistance, entity, partialTick, info);
         }
     }
 }

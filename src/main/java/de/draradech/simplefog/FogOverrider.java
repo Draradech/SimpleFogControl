@@ -35,8 +35,8 @@ public class FogOverrider {
     
     private static float currentFogStartPercent;
     private static float currentFogEndPercent;
-    private static int prevAge = 0;
-    public static void overrideTerrainFog(float viewDistance, Entity entity, CallbackInfoReturnable<FogParameters> info) {
+    private static int lastTick = 0;
+    public static void overrideTerrainFog(float viewDistance, Entity entity, float partialTick, CallbackInfoReturnable<FogParameters> info) {
         float fogStart, fogEnd;
         FogParameters parameters = info.getReturnValue();
         
@@ -50,8 +50,9 @@ public class FogOverrider {
             targetFogEndPercent = rainConf.rainEnd;
         }
         
-        if (entity.tickCount != prevAge) {
-            int a = rainConf.rainFogApplySpeed;
+        if (currentFogStartPercent != targetFogStartPercent || currentFogEndPercent != targetFogEndPercent) {
+            float delta = entity.tickCount - lastTick + partialTick;
+            float a = rainConf.rainFogApplySpeed * delta;
             if (currentFogStartPercent < targetFogStartPercent) {
                 currentFogStartPercent = Math.min(targetFogStartPercent, currentFogStartPercent + a);
             } else {
@@ -63,8 +64,8 @@ public class FogOverrider {
             } else {
                 currentFogEndPercent = Math.max(targetFogEndPercent, currentFogEndPercent - a);
             }
-            prevAge = entity.tickCount;
         }
+        lastTick = entity.tickCount;
         
         fogStart = viewDistance * currentFogStartPercent * 0.01f;
         fogEnd = viewDistance * currentFogEndPercent * 0.01f;
