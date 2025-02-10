@@ -4,6 +4,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -33,9 +34,9 @@ public class FogOverrider {
         info.setReturnValue(new FogParameters(fogStart, fogEnd, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
     }
     
-    private static float currentFogStartPercent;
-    private static float currentFogEndPercent;
-    private static int lastTick = 0;
+    private static float currentFogStartPercent = Float.NaN;
+    private static float currentFogEndPercent = Float.NaN;
+    private static double timeLast = 0;
     public static void overrideTerrainFog(float viewDistance, Entity entity, float partialTick, CallbackInfoReturnable<FogParameters> info) {
         float fogStart, fogEnd;
         FogParameters parameters = info.getReturnValue();
@@ -50,22 +51,26 @@ public class FogOverrider {
             targetFogEndPercent = rainConf.rainEnd;
         }
         
+        if (Float.isNaN(currentFogStartPercent)) currentFogStartPercent = targetFogStartPercent;
+        if (Float.isNaN(currentFogEndPercent)) currentFogEndPercent = targetFogEndPercent;
+        
         if (currentFogStartPercent != targetFogStartPercent || currentFogEndPercent != targetFogEndPercent) {
-            float delta = entity.tickCount - lastTick + partialTick;
-            float a = rainConf.rainFogApplySpeed * delta;
+            float delta = (float)((double)entity.tickCount + partialTick - timeLast);
+            delta = Mth.clamp(delta, 0.0f, 1.0f);
+            float applySpeed = rainConf.rainFogApplySpeed * delta;
             if (currentFogStartPercent < targetFogStartPercent) {
-                currentFogStartPercent = Math.min(targetFogStartPercent, currentFogStartPercent + a);
+                currentFogStartPercent = Math.min(targetFogStartPercent, currentFogStartPercent + applySpeed);
             } else {
-                currentFogStartPercent = Math.max(targetFogStartPercent, currentFogStartPercent - a);
+                currentFogStartPercent = Math.max(targetFogStartPercent, currentFogStartPercent - applySpeed);
             }
 
             if (currentFogEndPercent < targetFogEndPercent) {
-                currentFogEndPercent = Math.min(targetFogEndPercent, currentFogEndPercent + a);
+                currentFogEndPercent = Math.min(targetFogEndPercent, currentFogEndPercent + applySpeed);
             } else {
-                currentFogEndPercent = Math.max(targetFogEndPercent, currentFogEndPercent - a);
+                currentFogEndPercent = Math.max(targetFogEndPercent, currentFogEndPercent - applySpeed);
             }
         }
-        lastTick = entity.tickCount;
+        timeLast = (double)entity.tickCount + partialTick;
         
         fogStart = viewDistance * currentFogStartPercent * 0.01f;
         fogEnd = viewDistance * currentFogEndPercent * 0.01f;

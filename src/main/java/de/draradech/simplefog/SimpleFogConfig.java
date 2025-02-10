@@ -12,7 +12,7 @@ public class SimpleFogConfig implements ConfigData {
         public float rainStart = 0.0f;
         public float rainStartIndoor = 25.0f;
         public float rainEnd = 110.0f;
-        public int rainFogApplySpeed = 1;
+        public float rainFogApplySpeed = 1.0f;
     }
 
     @ConfigEntry.Category(value = "terrain")
