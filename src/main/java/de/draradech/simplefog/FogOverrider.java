@@ -46,7 +46,7 @@ public class FogOverrider {
         SimpleFogConfig.RainConfig rainConf = SimpleFogMain.config.rainConfig;
         if (rainConf.rainToggle && entity.level().isRaining()) {
             boolean skylight = entity.getEyeY() >= entity.level().getHeight(Heightmap.Types.WORLD_SURFACE, entity.getBlockX(), entity.getBlockZ());
-            targetFogStartPercent = Math.min(100, Math.max(skylight ? -999 : -20, rainConf.rainStart) + (skylight ? 0 : rainConf.minIndoorFog / viewDistance * 100));
+            targetFogStartPercent = skylight ? rainConf.rainStart : rainConf.rainStartIndoor;
             targetFogEndPercent = rainConf.rainEnd;
         }
         
