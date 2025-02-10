@@ -17,20 +17,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FogRenderer.class)
-public class FogRendererMixin
-{
+public class FogRendererMixin {
     @Inject(at = @At("RETURN"), method = "setupFog(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/FogRenderer$FogMode;Lorg/joml/Vector4f;FZF)Lnet/minecraft/client/renderer/FogParameters;", cancellable = true)
-    private static void afterSetupFog(Camera camera, FogMode fogMode, Vector4f fogColor, float viewDistance, boolean thickFog, float partialTick, CallbackInfoReturnable<FogParameters> info)
-    {
+    private static void afterSetupFog(Camera camera, FogMode fogMode, Vector4f fogColor, float viewDistance, boolean thickFog, float partialTick, CallbackInfoReturnable<FogParameters> info) {
         FogParameters parameters = info.getReturnValue();
         if (parameters == FogParameters.NO_FOG) return;
         FogType fogType = camera.getFluidInCamera();
         Entity entity = camera.getEntity();
-        boolean mobEffect = (  (entity instanceof LivingEntity)
-                && (  ((LivingEntity)entity).hasEffect(MobEffects.BLINDNESS)
-                || ((LivingEntity)entity).hasEffect(MobEffects.DARKNESS)
-        )
-        );
+        boolean mobEffect = (  (entity instanceof LivingEntity livingEntity)
+                            && (  livingEntity.hasEffect(MobEffects.BLINDNESS)
+                               || livingEntity.hasEffect(MobEffects.DARKNESS)
+                               )
+                            ); 
         if (fogType == FogType.LAVA) {
         } else if (fogType == FogType.POWDER_SNOW) {
         } else if (mobEffect) {
