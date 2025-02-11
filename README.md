@@ -6,6 +6,8 @@ The settings screen is available through either the "Mod Menu" or "Mod Settings"
 
 [![Comparision](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)
 
+[![Rain Fog](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/rain-fog.jpg)](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/rain-fog.jpg)
+
 ![Settings 1](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/settings1.png)
 
 ![Settings 2](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/settings2.png)
