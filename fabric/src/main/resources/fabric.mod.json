@@ -1,0 +1,35 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "Simple Fog Control",
+    "description": "Allows simple control over water, nether and terrain fog.",
+    "authors": [
+        "Draradech"
+    ],
+    "contributors": [
+        "orangishcat (RainFog)"
+    ],
+    "contact": {
+        "homepage": "https://github.com/Draradech/SimpleFogControl",
+        "issues":  "https://github.com/Draradech/SimpleFogControl/issues"
+    },
+    "license": "MIT",
+    "icon": "assets/${mod_id}/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "main": [
+            "de.draradech.simplefog.SimpleFogFabric"
+        ],
+        "modmenu": [
+            "de.draradech.simplefog.SimpleFogMenuIntegration"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
+    ],
+    "depends": {
+        "minecraft": ">=${minecraft_version}",
+        "cloth-config": "*"
+    }
+}

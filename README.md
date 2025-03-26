@@ -2,7 +2,7 @@
 
 Allows simple control over water, nether and terrain fog.
 
-The settings screen is available through either the "Mod Menu" or "Mod Settings" mod.
+For the fabric version the settings screen is available through the "Mod Menu" mod.
 
 [![Comparision](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)](https://raw.githubusercontent.com/Draradech/SimpleFogControl/master/doc/comparision.jpg)
 

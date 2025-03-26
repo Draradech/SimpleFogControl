@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL="https://github.com/Draradech/SimpleFogControl/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "Simple Fog Control"
+displayURL="https://github.com/Draradech/SimpleFogControl"
+logoFile="assets/${mod_id}/icon.png"
+credits="orangishcat (RainFog)"
+authors = "Draradech"
+description = "Allows simple control over water, nether and terrain fog."
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type="required"
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${mod_id}]]
+modId = "cloth_config"
+type="required"
+versionRange = "[1,)"
+ordering = "NONE"
+side = "CLIENT"
