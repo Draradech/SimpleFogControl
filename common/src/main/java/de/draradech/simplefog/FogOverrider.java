@@ -1,19 +1,17 @@
 package de.draradech.simplefog;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class FogOverrider {
-    public static void overrideWaterFog(float viewDistance, Entity entity, CallbackInfoReturnable<FogParameters> info) {
+    public static void overrideWaterFog(float viewDistance, Entity entity) {
         float fogStart, fogEnd;
-        FogParameters parameters = info.getReturnValue();
         fogStart = viewDistance * SimpleFogMain.config.waterStart * 0.01f;
         fogEnd = viewDistance * SimpleFogMain.config.waterEnd * 0.01f;
         if (entity instanceof LocalPlayer localPlayer) {
@@ -23,24 +21,25 @@ public class FogOverrider {
             }
             fogEnd *= Math.max(0.25f, localPlayer.getWaterVision());
         }
-        info.setReturnValue(new FogParameters(fogStart, fogEnd, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
+        RenderSystem.setShaderFogStart(fogStart);
+        RenderSystem.setShaderFogEnd(fogEnd);
     }
     
-    public static void overrideNetherFog(float viewDistance, CallbackInfoReturnable<FogParameters> info) {
+    public static void overrideNetherFog(float viewDistance) {
         float fogStart, fogEnd;
-        FogParameters parameters = info.getReturnValue();
+
         fogStart = viewDistance * SimpleFogMain.config.netherStart * 0.01f;
         fogEnd = viewDistance * SimpleFogMain.config.netherEnd * 0.01f;
-        info.setReturnValue(new FogParameters(fogStart, fogEnd, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
+        RenderSystem.setShaderFogStart(fogStart);
+        RenderSystem.setShaderFogEnd(fogEnd);
     }
     
     private static float currentFogStartPercent = Float.NaN;
     private static float currentFogEndPercent = Float.NaN;
     private static double timeLast = 0;
-    public static void overrideTerrainFog(float viewDistance, Entity entity, float partialTick, CallbackInfoReturnable<FogParameters> info) {
+    public static void overrideTerrainFog(float viewDistance, Entity entity, float partialTick) {
         float fogStart, fogEnd;
-        FogParameters parameters = info.getReturnValue();
-        
+
         float targetFogStartPercent = SimpleFogMain.config.terrainStart;
         float targetFogEndPercent = SimpleFogMain.config.terrainEnd;
         
@@ -74,6 +73,7 @@ public class FogOverrider {
         
         fogStart = viewDistance * currentFogStartPercent * 0.01f;
         fogEnd = viewDistance * currentFogEndPercent * 0.01f;
-        info.setReturnValue(new FogParameters(fogStart, fogEnd, parameters.shape(), parameters.red(), parameters.green(), parameters.blue(), parameters.alpha()));
+        RenderSystem.setShaderFogStart(fogStart);
+        RenderSystem.setShaderFogEnd(fogEnd);
     }
 }
