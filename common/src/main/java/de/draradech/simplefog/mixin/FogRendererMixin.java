@@ -2,22 +2,24 @@ package de.draradech.simplefog.mixin;
 
 import de.draradech.simplefog.SimpleFogMain;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.FogRenderer;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
-    @ModifyVariable(at = @At("HEAD"), method = "updateBuffer(Ljava/nio/ByteBuffer;ILorg/joml/Vector4f;FFFFFF)V", ordinal = 2)
-    private float modifyRenderDistanceStart(float renderDistanceStart) {
-        if (!SimpleFogMain.config.terrainToggle) return renderDistanceStart;
-        return Minecraft.getInstance().options.getEffectiveRenderDistance() * SimpleFogMain.config.terrainStart * 0.16f;
+    @Redirect(method = "setupFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/fog/FogData;renderDistanceStart:F", opcode = Opcodes.PUTFIELD))
+    private void modifyRenderDistanceStart(FogData data, float renderDistanceStart) {
+        if (!SimpleFogMain.config.terrainToggle) data.renderDistanceStart = renderDistanceStart;
+        else data.renderDistanceStart = Minecraft.getInstance().options.getEffectiveRenderDistance() * SimpleFogMain.config.terrainStart * 0.16f;
     }
 
-    @ModifyVariable(at = @At("HEAD"), method = "updateBuffer(Ljava/nio/ByteBuffer;ILorg/joml/Vector4f;FFFFFF)V", ordinal = 3)
-    private float modifyRenderDistanceEnd(float renderDistanceEnd) {
-        if (!SimpleFogMain.config.terrainToggle) return renderDistanceEnd;
-        return Minecraft.getInstance().options.getEffectiveRenderDistance() * SimpleFogMain.config.terrainEnd * 0.16f;
+    @Redirect(method = "setupFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/fog/FogData;renderDistanceEnd:F", opcode = Opcodes.PUTFIELD))
+    private void modifyRenderDistanceEnd(FogData data, float renderDistanceEnd) {
+        if (!SimpleFogMain.config.terrainToggle) data.renderDistanceEnd = renderDistanceEnd;
+        else data.renderDistanceEnd = Minecraft.getInstance().options.getEffectiveRenderDistance() * SimpleFogMain.config.terrainEnd * 0.16f;
     }
 }
