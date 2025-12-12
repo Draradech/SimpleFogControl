@@ -2,14 +2,12 @@
   "required": true,
   "minVersion": "0.8",
   "package": "de.draradech.simplefog.mixin",
-  "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
     "FogRendererMixin",
     "AtmosphericFogEnvironmentMixin",
-    "DimensionOrBossFogEnvironmentMixin",
     "WaterFogEnvironmentMixin"
   ],
   "injectors": {
