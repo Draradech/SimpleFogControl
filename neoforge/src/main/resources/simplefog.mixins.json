@@ -8,7 +8,6 @@
   "client": [
     "FogRendererMixin",
     "AtmosphericFogEnvironmentMixin",
-    "DimensionOrBossFogEnvironmentMixin",
     "WaterFogEnvironmentMixin"
   ],
   "injectors": {
