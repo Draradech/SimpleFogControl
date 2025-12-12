@@ -15,16 +15,30 @@ public class SimpleFogConfig implements ConfigData {
         public float rainFogApplySpeed = 1.0f;
     }
 
-    @ConfigEntry.Category(value = "terrain")
-    public boolean terrainToggle = true;
-    @ConfigEntry.Category(value = "terrain")
-    public float terrainStart = 70.0f;
-    @ConfigEntry.Category(value = "terrain")
-    public float terrainEnd = 130.0f;
-    @ConfigEntry.Category(value = "terrain")
+    @ConfigEntry.Category(value = "overworld")
+    public boolean overworldToggle = true;
+    @ConfigEntry.Category(value = "overworld")
+    public float overworldStart = 70.0f;
+    @ConfigEntry.Category(value = "overworld")
+    public float overworldEnd = 130.0f;
+    @ConfigEntry.Category(value = "overworld")
     @ConfigEntry.Gui.CollapsibleObject
     public RainConfig rainConfig = new RainConfig();
-    
+
+    @ConfigEntry.Category(value = "nether")
+    public boolean netherToggle = true;
+    @ConfigEntry.Category(value = "nether")
+    public float netherStart = 5.0f;
+    @ConfigEntry.Category(value = "nether")
+    public float netherEnd = 80.0f;
+
+    @ConfigEntry.Category(value = "end")
+    public boolean endToggle = true;
+    @ConfigEntry.Category(value = "end")
+    public float endStart = 70.0f;
+    @ConfigEntry.Category(value = "end")
+    public float endEnd = 130.0f;
+
     @ConfigEntry.Category(value = "water")
     public boolean waterToggle = true;
     @ConfigEntry.Category(value = "water")
@@ -33,11 +47,4 @@ public class SimpleFogConfig implements ConfigData {
     public float waterEnd = 90.0f;
     @ConfigEntry.Category(value = "water")
     public float waterEndSwamp = 60.0f;
-    
-    @ConfigEntry.Category(value = "nether")
-    public boolean netherToggle = true;
-    @ConfigEntry.Category(value = "nether")
-    public float netherStart = 5.0f;
-    @ConfigEntry.Category(value = "nether")
-    public float netherEnd = 80.0f;
 }
