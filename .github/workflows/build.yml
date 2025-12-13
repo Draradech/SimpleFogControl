@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       GRADLE_OPTS: "-Dorg.gradle.internal.http.connectionTimeout=120000 -Dorg.gradle.internal.http.socketTimeout=120000"
+    strategy:
+      matrix:
+        modloader: [fabric, neoforge]
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -19,7 +22,7 @@ jobs:
       - name: setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          cache-read-only: ${{ github.event_name == 'pull_request' }}
+          cache-read-only: ${{ github.event_name != 'push' }}
       - name: setup jdk
         uses: actions/setup-java@v4
         with:
@@ -27,21 +30,12 @@ jobs:
           distribution: 'microsoft'
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: build fabric
-        run: ./gradlew :fabric:build
-      - name: build neoforge
-        run: ./gradlew :neoforge:build
-      - name: upload fabric artifact
+      - name: build project
+        run: ./gradlew :${{ matrix.modloader }}:build
+      - name: upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fabric-artifacts
+          name: ${{ matrix.modloader }}-artifacts
           path: |
-            fabric/build/libs/*.jar
-          if-no-files-found: error
-      - name: upload neoforge artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: neoforge-artifacts
-          path: |
-            neoforge/build/libs/*.jar
+            ${{ matrix.modloader }}/build/libs/*.jar
           if-no-files-found: error
