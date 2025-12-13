@@ -37,6 +37,11 @@ repositories {
         )
         filter { includeGroup('org.parchmentmc.data') }
     }
+
+    maven {
+        name = 'NeoForgeGeneral'
+        url = 'https://maven.neoforged.net/releases'
+    }
     maven {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
