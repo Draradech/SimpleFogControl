@@ -38,58 +38,65 @@ public class AtmosphericFogEnvironmentMixin {
     public void tailSetupFog(FogData fogData, Camera camera, ClientLevel clientLevel, float viewDistance, DeltaTracker deltaTracker, CallbackInfo ci)
     {
         SimpleFogConfig config = SimpleFogMain.config;
-        if (config.overworldToggle && clientLevel.dimension() == Level.OVERWORLD)
+        if (clientLevel.dimension() == Level.NETHER)
         {
-            SimpleFogConfig.RainConfig rainConf = config.rainConfig;
-
-            if (rainConf.rainToggle)
+            if (config.netherToggle)
             {
-                BlockPos blockPos = camera.blockPosition();
-                boolean skylight = blockPos.getY() >= clientLevel.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
-                float step = rainConf.rainFogApplySpeed * deltaTracker.getRealtimeDeltaTicks() * 0.01f;
-                currentRainFactor = approach(currentRainFactor, clientLevel.isRaining() ? 1.0f : 0.0f, step);
-                currentIndoorFactor = approach(currentIndoorFactor, skylight ? 0.0f : 1.0f, step);
-
-                float rainStartPerc = Mth.lerp(currentIndoorFactor, rainConf.rainStart, rainConf.rainStartIndoor);
-                float envStartPerc = Mth.lerp(currentRainFactor, config.overworldStart, rainStartPerc);
-                float cloudEndClear = Minecraft.getInstance().options.cloudRange().get() * 16.0f;
-                float cloudEndRain = cloudEndClear * rainConf.rainEnd / config.overworldEnd;
-                fogData.environmentalStart = viewDistance * envStartPerc * 0.01f;
-                fogData.cloudEnd = Mth.lerp(currentRainFactor, cloudEndClear, cloudEndRain);
-
-                float overworldEnd = viewDistance * config.overworldEnd * 0.01f;
-                if (config.overworldEndVoxy > 0.5f) overworldEnd = voxyEnd(fogData.environmentalStart, config.overworldEndVoxy, viewDistance);
-                float rainEnd = viewDistance * rainConf.rainEnd * 0.01f;
-                if (rainConf.rainEndVoxy > 0.5f) rainEnd = voxyEnd(fogData.environmentalStart, rainConf.rainEndVoxy, viewDistance);
-                fogData.environmentalEnd = Mth.lerp(currentRainFactor, overworldEnd, rainEnd);
+                fogData.environmentalStart = viewDistance * config.netherStart * 0.01f;
+                float netherEnd = viewDistance * config.netherEnd * 0.01f;
+                if (config.netherEndVoxy > 0.5f) netherEnd = voxyEnd(fogData.environmentalStart, config.netherEndVoxy, viewDistance);
+                fogData.environmentalEnd = netherEnd;
+                fogData.cloudEnd = fogData.environmentalEnd;
+                fogData.skyEnd = fogData.environmentalEnd;
             }
-            else
+        }
+        else if (clientLevel.dimension() == Level.END)
+        {
+            if (config.endToggle)
             {
-                fogData.environmentalStart = viewDistance * config.overworldStart * 0.01f;
-                fogData.cloudEnd = Minecraft.getInstance().options.cloudRange().get() * 16.0f;
-                float overworldEnd = viewDistance * config.overworldEnd * 0.01f;
-                if (config.overworldEndVoxy > 0.5f) overworldEnd = voxyEnd(fogData.environmentalStart, config.overworldEndVoxy, viewDistance);
-                fogData.environmentalEnd = overworldEnd;
+                fogData.environmentalStart = viewDistance * config.endStart * 0.01f;
+                float endEnd = viewDistance * config.endEnd * 0.01f;
+                if (config.endEndVoxy > 0.5f) endEnd = voxyEnd(fogData.environmentalStart, config.endEndVoxy, viewDistance);
+                fogData.environmentalEnd = endEnd;
+                fogData.cloudEnd = fogData.environmentalEnd;
+                fogData.skyEnd = fogData.environmentalEnd;
             }
-            fogData.skyEnd = Math.min(fogData.environmentalEnd, viewDistance);
         }
-        else if (config.netherToggle && clientLevel.dimension() == Level.NETHER)
+        else
         {
-            fogData.environmentalStart = viewDistance * config.netherStart * 0.01f;
-            float netherEnd = viewDistance * config.netherEnd * 0.01f;
-            if (config.netherEndVoxy > 0.5f) netherEnd = voxyEnd(fogData.environmentalStart, config.netherEndVoxy, viewDistance);
-            fogData.environmentalEnd = netherEnd;
-            fogData.cloudEnd = fogData.environmentalEnd;
-            fogData.skyEnd = fogData.environmentalEnd;
-        }
-        else if (config.endToggle && clientLevel.dimension() == Level.END)
-        {
-            fogData.environmentalStart = viewDistance * config.endStart * 0.01f;
-            float endEnd = viewDistance * config.endEnd * 0.01f;
-            if (config.endEndVoxy > 0.5f) endEnd = voxyEnd(fogData.environmentalStart, config.endEndVoxy, viewDistance);
-            fogData.environmentalEnd = endEnd;
-            fogData.cloudEnd = fogData.environmentalEnd;
-            fogData.skyEnd = fogData.environmentalEnd;
+            if (config.overworldToggle)
+            {
+                // overworld and custom dimensions
+                SimpleFogConfig.RainConfig rainConf = config.rainConfig;
+
+                if (rainConf.rainToggle) {
+                    BlockPos blockPos = camera.blockPosition();
+                    boolean skylight = blockPos.getY() >= clientLevel.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
+                    float step = rainConf.rainFogApplySpeed * deltaTracker.getRealtimeDeltaTicks() * 0.01f;
+                    currentRainFactor = approach(currentRainFactor, clientLevel.isRaining() ? 1.0f : 0.0f, step);
+                    currentIndoorFactor = approach(currentIndoorFactor, skylight ? 0.0f : 1.0f, step);
+
+                    float rainStartPerc = Mth.lerp(currentIndoorFactor, rainConf.rainStart, rainConf.rainStartIndoor);
+                    float envStartPerc = Mth.lerp(currentRainFactor, config.overworldStart, rainStartPerc);
+                    float cloudEndClear = Minecraft.getInstance().options.cloudRange().get() * 16.0f;
+                    float cloudEndRain = cloudEndClear * rainConf.rainEnd / config.overworldEnd;
+                    fogData.environmentalStart = viewDistance * envStartPerc * 0.01f;
+                    fogData.cloudEnd = Mth.lerp(currentRainFactor, cloudEndClear, cloudEndRain);
+
+                    float overworldEnd = viewDistance * config.overworldEnd * 0.01f;
+                    if (config.overworldEndVoxy > 0.5f) overworldEnd = voxyEnd(fogData.environmentalStart, config.overworldEndVoxy, viewDistance);
+                    float rainEnd = viewDistance * rainConf.rainEnd * 0.01f;
+                    if (rainConf.rainEndVoxy > 0.5f) rainEnd = voxyEnd(fogData.environmentalStart, rainConf.rainEndVoxy, viewDistance);
+                    fogData.environmentalEnd = Mth.lerp(currentRainFactor, overworldEnd, rainEnd);
+                } else {
+                    fogData.environmentalStart = viewDistance * config.overworldStart * 0.01f;
+                    fogData.cloudEnd = Minecraft.getInstance().options.cloudRange().get() * 16.0f;
+                    float overworldEnd = viewDistance * config.overworldEnd * 0.01f;
+                    if (config.overworldEndVoxy > 0.5f) overworldEnd = voxyEnd(fogData.environmentalStart, config.overworldEndVoxy, viewDistance);
+                    fogData.environmentalEnd = overworldEnd;
+                }
+                fogData.skyEnd = Math.min(fogData.environmentalEnd, viewDistance);
+            }
         }
     }
 }
